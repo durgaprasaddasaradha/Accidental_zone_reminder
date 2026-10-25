@@ -307,43 +307,65 @@ const loadAnalysisData = async () => {
       offset: 0,
     });
 
-    const raw = response as unknown;
-
-    let records: AnalysisZone[] = [];
-
-    if (Array.isArray(raw)) {
-      records = raw as AnalysisZone[];
-    } else if (raw && typeof raw === "object") {
-      const result = raw as {
-        zones?: AnalysisZone[];
-        data?: AnalysisZone[];
-        items?: AnalysisZone[];
-        results?: AnalysisZone[];
-      };
-
-      if (Array.isArray(result.zones)) {
-        records = result.zones;
-      } else if (Array.isArray(result.data)) {
-        records = result.data;
-      } else if (Array.isArray(result.items)) {
-        records = result.items;
-      } else if (Array.isArray(result.results)) {
-        records = result.results;
+    const extractRecords = (value: unknown): AnalysisZone[] => {
+      if (Array.isArray(value)) {
+        return value as AnalysisZone[];
       }
-    }
+
+      if (!value || typeof value !== "object") {
+        return [];
+      }
+
+      const obj = value as Record<string, unknown>;
+
+      // Check common API response formats.
+      const possibleKeys = [
+        "zones",
+        "data",
+        "items",
+        "results",
+        "records",
+      ];
+
+      for (const key of possibleKeys) {
+        const candidate = obj[key];
+
+        if (Array.isArray(candidate)) {
+          return candidate as AnalysisZone[];
+        }
+
+        if (candidate && typeof candidate === "object") {
+          const nestedRecords = extractRecords(candidate);
+
+          if (nestedRecords.length > 0) {
+            return nestedRecords;
+          }
+        }
+      }
+
+      return [];
+    };
+
+    const records = extractRecords(response);
+
+    console.log("Analysis API response:", response);
+    console.log("Analysis records loaded:", records.length);
+    console.log("First analysis record:", records[0]);
 
     setAnalysisZones(records);
 
     if (records.length === 0) {
       setAnalysisError(
-        "The API responded, but no zone records were found in the expected response format."
+        "The API responded, but no zone records were found. Check the browser console for the response format."
       );
     }
   } catch (error) {
     console.error("Failed to load analysis data:", error);
 
+    setAnalysisZones([]);
+
     setAnalysisError(
-      "Could not load analysis data. Check the API URL and browser console for details."
+      "Could not load analysis data. Check VITE_API_URL and the backend connection."
     );
   } finally {
     setAnalysisLoading(false);
