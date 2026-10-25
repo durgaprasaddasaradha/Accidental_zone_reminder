@@ -297,50 +297,58 @@ const App: React.FC = () => {
     }
   };
 
-  const loadAnalysisData = async () => {
-    setAnalysisLoading(true);
-    setAnalysisError("");
+const loadAnalysisData = async () => {
+  setAnalysisLoading(true);
+  setAnalysisError("");
 
-    try {
-      const response =
-        await zoneService.fetchZones({
-          limit: 100,
-          offset: 0,
-        });
+  try {
+    const response = await zoneService.fetchZones({
+      limit: 100,
+      offset: 0,
+    });
 
-      const raw = response as unknown as {
+    const raw = response as unknown;
+
+    let records: AnalysisZone[] = [];
+
+    if (Array.isArray(raw)) {
+      records = raw as AnalysisZone[];
+    } else if (raw && typeof raw === "object") {
+      const result = raw as {
         zones?: AnalysisZone[];
         data?: AnalysisZone[];
+        items?: AnalysisZone[];
+        results?: AnalysisZone[];
       };
 
-      let records: AnalysisZone[] = [];
-
-      if (Array.isArray(raw.zones)) {
-        records = raw.zones;
-      } else if (Array.isArray(raw.data)) {
-        records = raw.data;
+      if (Array.isArray(result.zones)) {
+        records = result.zones;
+      } else if (Array.isArray(result.data)) {
+        records = result.data;
+      } else if (Array.isArray(result.items)) {
+        records = result.items;
+      } else if (Array.isArray(result.results)) {
+        records = result.results;
       }
-
-      setAnalysisZones(records);
-
-      if (records.length === 0) {
-        setAnalysisError(
-          "The API returned no detailed zone records."
-        );
-      }
-    } catch (error) {
-      console.error(
-        "Failed to load analysis data:",
-        error
-      );
-
-      setAnalysisError(
-        "Could not load detailed analysis data. Make sure the FastAPI backend is running."
-      );
-    } finally {
-      setAnalysisLoading(false);
     }
-  };
+
+    setAnalysisZones(records);
+
+    if (records.length === 0) {
+      setAnalysisError(
+        "The API responded, but no zone records were found in the expected response format."
+      );
+    }
+  } catch (error) {
+    console.error("Failed to load analysis data:", error);
+
+    setAnalysisError(
+      "Could not load analysis data. Check the API URL and browser console for details."
+    );
+  } finally {
+    setAnalysisLoading(false);
+  }
+};
 
   const loadMonitorZones = async () => {
     setMonitorLoading(true);
