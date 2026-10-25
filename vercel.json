@@ -1,8 +1,9 @@
-<escape>{
+
+{
   "rewrites": [
     {
       "source": "/(.*)",
       "destination": "/index.html"
     }
   ]
-}</escape>
+}
