@@ -306,6 +306,7 @@ const loadAnalysisData = async () => {
       limit: 100,
       offset: 0,
     });
+    console.log("Analysis request succeeded:", response);
 
     const extractRecords = (value: unknown): AnalysisZone[] => {
       if (Array.isArray(value)) {
@@ -360,16 +361,18 @@ const loadAnalysisData = async () => {
       );
     }
   } catch (error) {
-    console.error("Failed to load analysis data:", error);
+  console.error("Failed to load analysis data:", error);
 
-    setAnalysisZones([]);
+  setAnalysisZones([]);
 
-    setAnalysisError(
-      "Could not load analysis data. Check VITE_API_URL and the backend connection."
-    );
-  } finally {
-    setAnalysisLoading(false);
-  }
+  setAnalysisError(
+    error instanceof Error
+      ? `Analysis loading failed: ${error.message}`
+      : "Analysis loading failed. Check the browser console."
+  );
+} finally {
+  setAnalysisLoading(false);
+}
 };
 
   const loadMonitorZones = async () => {
