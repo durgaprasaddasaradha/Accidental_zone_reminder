@@ -1,0 +1,6 @@
+id,name,state,district,highway,latitude,longitude,severity,warning_radius,is_demo
+DEMO-001,Rajiv Chowk Demo Zone,Haryana,Gurugram,NH-48,28.4595,77.0266,85.7,1000,true
+DEMO-002,IFFCO Chowk Demo Zone,Haryana,Gurugram,NH-48,28.4722,77.0727,72.4,1000,true
+DEMO-003,Electronic City Demo Zone,Karnataka,Bengaluru,Electronic City Flyover,12.8399,77.6770,68.2,1000,true
+DEMO-004,Maduravoyal Demo Zone,Tamil Nadu,Chennai,Chennai Bypass,13.0694,80.1686,61.5,1000,true
+DEMO-005,Khed Shivapur Demo Zone,Maharashtra,Pune,NH-48,18.3476,73.8543,55.8,1000,true

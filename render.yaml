@@ -1,0 +1,21 @@
+# Render.com deployment configuration for FastAPI backend
+# See: https://render.com/docs/yaml-spec
+
+services:
+  - type: web
+    name: accidental-zone-reminder-api
+    runtime: python
+    region: singapore          # closest free-tier region for India; change if needed
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn api.index:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.0"
+      # Supabase credentials — fill these in the Render dashboard, NOT here
+      - key: SUPABASE_URL
+        sync: false            # prompts you to enter value in Render UI
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+    autoDeploy: true           # auto-redeploy on every push to the linked branch

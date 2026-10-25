@@ -1,0 +1,53 @@
+# ==============================================================================
+# Accidental Zone Reminder System — .gitignore
+# ==============================================================================
+
+# ── Environment / Secrets ─────────────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+# Keep .env.example (it has NO real secrets — only placeholder values)
+
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+.venv/
+venv/
+env/
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+*.cover
+*.log
+
+# ── Node / Frontend ────────────────────────────────────────────────────────────
+node_modules/
+frontend/dist/
+frontend/.vite/
+
+# ── OS / Editor ────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ── Vercel ────────────────────────────────────────────────────────────────────
+.vercel
+
+# ── Data — keep CSVs, ignore large/generated files ────────────────────────────
+# data/raw CSV files ARE committed (non-secret public accident data)
+# Add patterns here if you later add large binary data files
